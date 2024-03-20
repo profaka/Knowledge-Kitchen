@@ -25,6 +25,7 @@ public class MainController {
     // Add a booking
     public void addBooking(Booking booking) {
         bookings.add(booking);
+        System.out.println("Booking added: " + booking); // Для отладки
     }
 
     // Get the list of bookings

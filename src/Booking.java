@@ -80,13 +80,13 @@ public class Booking {
     @Override
     public String toString() {
         return "Booking{" +
-               "name='" + name + '\'' +
-               ", email='" + email + '\'' +
-               ", phone='" + phone + '\'' +
-               ", date=" + date +
-               ", time=" + time +
-               ", partySize=" + partySize +
-               ", specialRequests='" + specialRequests + '\'' +
-               '}';
+                "name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", phone='" + phone + '\'' +
+                ", date=" + date +
+                ", time=" + time +
+                ", partySize=" + partySize +
+                ", specialRequests='" + specialRequests + '\'' +
+                '}';
     }
 }

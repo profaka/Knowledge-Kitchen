@@ -6,8 +6,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class MenuPage {
+import java.util.Arrays;
+import java.util.List;
 
+public class MenuPage {
     private VBox layout;
 
     public MenuPage() {
@@ -18,40 +20,28 @@ public class MenuPage {
         Label pageTitle = new Label("Menu");
         pageTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
-        GridPane menuItemsGrid = createMenuItemsGrid();
-
-        layout.getChildren().addAll(pageTitle, menuItemsGrid);
+        layout.getChildren().add(pageTitle);
+        layout.getChildren().add(createMenuSection("Salads", Arrays.asList("Greek Salad - 100g", "Caesar Salad - 150g")));
+        layout.getChildren().add(createMenuSection("Soups", Arrays.asList("Tomato Soup - 250ml", "Chicken Soup - 300ml")));
+        layout.getChildren().add(createMenuSection("Desserts", Arrays.asList("Cheesecake - 200g", "Ice Cream - 150g")));
+        layout.getChildren().add(createMenuSection("Drinks", Arrays.asList("Coffee - 200ml", "Green Tea - 250ml")));
     }
 
-    private GridPane createMenuItemsGrid() {
-        GridPane grid = new GridPane();
-        grid.setAlignment(Pos.CENTER);
-        grid.setHgap(10);
-        grid.setVgap(10);
-        grid.setPadding(new Insets(25, 25, 25, 25));
+    private VBox createMenuSection(String category, List<String> items) {
+        VBox section = new VBox(10);
+        section.setAlignment(Pos.CENTER_LEFT);
 
-        // Example menu items
-        String[][] menuItems = {
-                {"Starters", "Salmon Carpaccio", "Fondue", "Veal Carpaccio"},
-                {"Salads", "Meat Salad", "Turkey Salad"},
-                {"Soups", "Chiopino"}
-        };
+        Label categoryLabel = new Label(category);
+        categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
+        section.getChildren().add(categoryLabel);
 
-        for (int i = 0; i < menuItems.length; i++) {
-            Label categoryLabel = new Label(menuItems[i][0]);
-            categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-            grid.add(categoryLabel, 0, i);
-
-            VBox itemsBox = new VBox(5);
-            for (int j = 1; j < menuItems[i].length; j++) {
-                Label itemLabel = new Label(menuItems[i][j]);
-                itemLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-                itemsBox.getChildren().add(itemLabel);
-            }
-            grid.add(itemsBox, 1, i);
+        for (String item : items) {
+            Label itemLabel = new Label(item);
+            itemLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
+            section.getChildren().add(itemLabel);
         }
 
-        return grid;
+        return section;
     }
 
     public VBox getLayout() {

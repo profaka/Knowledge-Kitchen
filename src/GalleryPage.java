@@ -8,8 +8,10 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
-public class GalleryPage {
+import java.util.Arrays;
+import java.util.List;
 
+public class GalleryPage {
     private VBox layout;
 
     public GalleryPage() {
@@ -32,9 +34,13 @@ public class GalleryPage {
         tilePane.setHgap(15);
         tilePane.setVgap(15);
 
-        // Placeholder for images
-        for (int i = 1; i <= 5; i++) {
-            ImageView imageView = new ImageView(new Image("file:resources/images/food" + i + ".png"));
+        List<String> imagePaths = Arrays.asList(
+                "/resourses/cat.jpg"
+                // Добавьте пути к вашим изображениям
+        );
+
+        for (String imagePath : imagePaths) {
+            ImageView imageView = new ImageView(new Image(imagePath));
             imageView.setFitHeight(200);
             imageView.setFitWidth(200);
             imageView.setPreserveRatio(true);

@@ -10,32 +10,25 @@ import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 
 public class BookingPage {
+    private MainController mainController;
 
     private VBox layout;
 
-    public BookingPage() {
-        VBox formContainer = new VBox(10);
-        formContainer.setAlignment(Pos.CENTER);
-        // Устанавливаем отступы так, чтобы верхняя часть страницы оставалась видимой
-        formContainer.setPadding(new Insets(40, 20, 5, 20)); // Пример отступа сверху
-        formContainer.setStyle("-fx-background-color: white;"); // Белый фон с закругленными углами
+    public BookingPage(MainController mainController) {
+        this.mainController = mainController;
+        layout = new VBox(10);
+        layout.setAlignment(Pos.CENTER);
+        layout.setPadding(new Insets(20));
 
         Label pageTitle = new Label("Book Your Table");
         pageTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
 
         GridPane formGrid = createBookingForm();
-        formContainer.getChildren().addAll(pageTitle, formGrid);
 
-        // Добавляем formContainer к основному layout, который теперь станет прозрачным
-        layout = new VBox();
-        layout.setAlignment(Pos.CENTER);
-        layout.getChildren().add(formContainer);
-        // Применяем прозрачный фон к основному layout
-        layout.setStyle("-fx-background-color: rgba(0, 0, 0, 0);");
-
-
+        layout.getChildren().addAll(pageTitle, formGrid);
     }
 
     private GridPane createBookingForm() {
@@ -79,7 +72,21 @@ public class BookingPage {
         grid.add(submitButton, 1, 7);
 
         // Placeholder action for submit button
-        submitButton.setOnAction(e -> System.out.println("Booking submitted!"));
+        submitButton.setOnAction(e -> {
+            Booking newBooking = new Booking(
+                    nameField.getText(),
+                    emailField.getText(),
+                    phoneField.getText(),
+                    datePicker.getValue(),
+                    // Предполагается, что у вас есть логика для преобразования строки времени в LocalTime
+                    LocalTime.parse(timeField.getText()),
+                    Integer.parseInt(sizeField.getText()),
+                    specialRequestsField.getText()
+            );
+            mainController.addBooking(newBooking);
+            System.out.println("Booking submitted!"); // Для отладки
+            System.out.println("Booking submitted!");
+        });
 
         return grid;
     }
