@@ -8,7 +8,6 @@ import javafx.scene.layout.HBox;
 import javafx.stage.Stage;
 
 public class MainApp extends Application {
-
     private Stage primaryStage;
     private BorderPane rootLayout;
     private MainController mainController;
@@ -17,7 +16,13 @@ public class MainApp extends Application {
     public void start(Stage primaryStage) {
         this.primaryStage = primaryStage;
         this.mainController = new MainController();
+        FoodItem salad = new FoodItem("Греческий салат", "Салаты", 5.99, "Свежие овощи с фетой и оливковым маслом", "resources\\greekSalad.jpeg");
 
+        FoodItem soup = new FoodItem("Томатный суп", "Супы", 4.99, "Кремовый томатный суп с базиликом", "resources\\tomate.jpeg");
+        FoodItem dessert = new FoodItem("Чизкейк", "Десерты", 6.50, "Нежный чизкейк с ягодным соусом", "resources\\cheescake.jpeg");
+        mainController.addFoodItem(salad);
+        mainController.addFoodItem(soup);
+        mainController.addFoodItem(dessert);
         primaryStage.setTitle("Knowledge Kitchen - Food Ordering System");
         initRootLayout();
         showHomePage();
@@ -65,7 +70,7 @@ public class MainApp extends Application {
     }
 
     public void showMenuPage() {
-        MenuPage menuPage = new MenuPage();
+        MenuPage menuPage = new MenuPage(mainController);
         rootLayout.setCenter(menuPage.getLayout());
     }
 
@@ -75,7 +80,7 @@ public class MainApp extends Application {
     }
 
     public void showGalleryPage() {
-        GalleryPage galleryPage = new GalleryPage();
+        GalleryPage galleryPage = new GalleryPage(mainController);
         rootLayout.setCenter(galleryPage.getLayout());
     }
 

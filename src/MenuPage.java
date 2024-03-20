@@ -1,6 +1,10 @@
+import javafx.collections.ObservableList;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -8,23 +12,46 @@ import javafx.scene.text.FontWeight;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class MenuPage {
     private VBox layout;
+    private MainController mainController;
 
-    public MenuPage() {
-        layout = new VBox(20);
+    public MenuPage(MainController mainController) {
+        this.mainController = mainController;
+        layout = new VBox(10);
         layout.setAlignment(Pos.CENTER);
         layout.setPadding(new Insets(20));
 
-        Label pageTitle = new Label("Menu");
-        pageTitle.setFont(Font.font("Arial", FontWeight.BOLD, 24));
+        // Группировка блюд по категориям
+        Map<String, List<FoodItem>> foodItemsByCategory = mainController.getFoodItems().stream()
+                .collect(Collectors.groupingBy(FoodItem::getCategory));
 
-        layout.getChildren().add(pageTitle);
-        layout.getChildren().add(createMenuSection("Salads", Arrays.asList("Greek Salad - 100g", "Caesar Salad - 150g")));
-        layout.getChildren().add(createMenuSection("Soups", Arrays.asList("Tomato Soup - 250ml", "Chicken Soup - 300ml")));
-        layout.getChildren().add(createMenuSection("Desserts", Arrays.asList("Cheesecake - 200g", "Ice Cream - 150g")));
-        layout.getChildren().add(createMenuSection("Drinks", Arrays.asList("Coffee - 200ml", "Green Tea - 250ml")));
+        // Создание GUI для каждой категории
+        foodItemsByCategory.forEach((category, foodItems) -> {
+            Label categoryLabel = new Label(category);
+            categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
+            VBox categoryBox = new VBox(categoryLabel);
+            categoryBox.setSpacing(5);
+            categoryBox.setPadding(new Insets(15, 0, 15, 0));
+
+            foodItems.forEach(foodItem -> {
+                Label itemLabel = new Label(foodItem.getName() + " - " + foodItem.getDescription() + " - $" + foodItem.getPrice());
+                itemLabel.setWrapText(true);
+                itemLabel.setMaxWidth(200);
+
+                BorderPane borderPane = new BorderPane();
+                borderPane.setCenter(itemLabel);
+                BorderPane.setAlignment(itemLabel, Pos.CENTER_LEFT);
+                borderPane.setPadding(new Insets(10));
+
+                categoryBox.getChildren().add(borderPane);
+            });
+
+            layout.getChildren().add(categoryBox);
+        });
     }
 
     private VBox createMenuSection(String category, List<String> items) {

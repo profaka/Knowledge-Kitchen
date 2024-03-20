@@ -9,6 +9,7 @@ public class MainController {
     public MainController() {
         this.foodItems = FXCollections.observableArrayList();
         this.bookings = FXCollections.observableArrayList();
+
         // Here you could load initial data or handle other initialization
     }
 

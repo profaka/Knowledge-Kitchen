@@ -4,11 +4,14 @@ public class FoodItem {
     private double price;
     private String description;
 
-    public FoodItem(String name, String category, double price, String description) {
+    private String imagePath;
+
+    public FoodItem(String name, String category, double price, String description, String imagePath) {
         this.name = name;
         this.category = category;
         this.price = price;
         this.description = description;
+        this.imagePath = imagePath;
     }
 
     // Getters and setters
@@ -42,6 +45,14 @@ public class FoodItem {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getImagePath() {
+        return imagePath;
+    }
+
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     @Override

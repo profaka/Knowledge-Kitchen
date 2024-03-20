@@ -1,9 +1,6 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
-import javafx.scene.control.DatePicker;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
+import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -78,14 +75,27 @@ public class BookingPage {
                     emailField.getText(),
                     phoneField.getText(),
                     datePicker.getValue(),
-                    // Предполагается, что у вас есть логика для преобразования строки времени в LocalTime
                     LocalTime.parse(timeField.getText()),
                     Integer.parseInt(sizeField.getText()),
                     specialRequestsField.getText()
             );
             mainController.addBooking(newBooking);
-            System.out.println("Booking submitted!"); // Для отладки
-            System.out.println("Booking submitted!");
+
+            // Очистка полей формы после отправки
+            nameField.clear();
+            emailField.clear();
+            phoneField.clear();
+            datePicker.setValue(LocalDate.now()); // Возвращаем к текущей дате
+            timeField.clear();
+            sizeField.clear();
+            specialRequestsField.clear();
+
+            // Показ уведомления об успешной отправке
+            Alert alert = new Alert(Alert.AlertType.INFORMATION);
+            alert.setTitle("Booking Submitted");
+            alert.setHeaderText(null);
+            alert.setContentText("Your booking has been successfully submitted!");
+            alert.showAndWait();
         });
 
         return grid;
