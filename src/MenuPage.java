@@ -1,77 +1,78 @@
-import javafx.collections.ObservableList;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
 import javafx.scene.control.Label;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
-import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import javafx.scene.text.FontWeight;
+import javafx.scene.text.Text;
+import javafx.geometry.Insets;
+import javafx.geometry.Pos;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
 public class MenuPage {
-    private VBox layout;
+    private ScrollPane scrollPane;
     private MainController mainController;
 
     public MenuPage(MainController mainController) {
         this.mainController = mainController;
-        layout = new VBox(10);
-        layout.setAlignment(Pos.CENTER);
+        VBox layout = new VBox(10);
+        layout.setAlignment(Pos.TOP_CENTER);
         layout.setPadding(new Insets(20));
 
         // Группировка блюд по категориям
-        Map<String, List<FoodItem>> foodItemsByCategory = mainController.getFoodItems().stream()
-                .collect(Collectors.groupingBy(FoodItem::getCategory));
+        mainController.getFoodItems().stream()
+                .collect(Collectors.groupingBy(FoodItem::getCategory))
+                .forEach((category, foodItems) -> {
+                    Label categoryLabel = new Label(category);
+                    categoryLabel.setFont(Font.font("Georgia", FontWeight.BOLD, 24));
+                    categoryLabel.setPadding(new Insets(10, 0, 10, 0));
+                    categoryLabel.setTextAlignment(TextAlignment.CENTER);
+                    categoryLabel.setTextFill(Color.WHITE); // Цвет текста
+                    categoryLabel.setStyle("-fx-background-color: #494949; -fx-padding: 10px;"); // Фон
+                    categoryLabel.setMaxWidth(Double.MAX_VALUE);
+                    categoryLabel.setAlignment(Pos.CENTER);
 
-        // Создание GUI для каждой категории
-        foodItemsByCategory.forEach((category, foodItems) -> {
-            Label categoryLabel = new Label(category);
-            categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 20));
-            VBox categoryBox = new VBox(categoryLabel);
-            categoryBox.setSpacing(5);
-            categoryBox.setPadding(new Insets(15, 0, 15, 0));
+                    VBox categoryBox = new VBox(categoryLabel);
+                    categoryBox.setSpacing(50);
+                    categoryBox.setAlignment(Pos.TOP_CENTER);
+                    categoryBox.setPadding(new Insets(15, 50, 15, 50)); // Добавил отступы слева и справа
 
-            foodItems.forEach(foodItem -> {
-                Label itemLabel = new Label(foodItem.getName() + " - " + foodItem.getDescription() + " - $" + foodItem.getPrice());
-                itemLabel.setWrapText(true);
-                itemLabel.setMaxWidth(200);
+                    foodItems.forEach(foodItem -> {
+                        HBox itemBox = new HBox();
+                        itemBox.setSpacing(10);
+                        itemBox.setAlignment(Pos.CENTER_LEFT);
 
-                BorderPane borderPane = new BorderPane();
-                borderPane.setCenter(itemLabel);
-                BorderPane.setAlignment(itemLabel, Pos.CENTER_LEFT);
-                borderPane.setPadding(new Insets(10));
+                        Text nameAndDescription = new Text(foodItem.getName() + " - " + foodItem.getDescription());
+                        nameAndDescription.setFont(Font.font("Georgia", FontWeight.NORMAL, 18));
 
-                categoryBox.getChildren().add(borderPane);
-            });
+                        Text priceText = new Text("$" + foodItem.getPrice());
+                        priceText.setFont(Font.font("Georgia", FontWeight.BOLD, 18));
+                        priceText.setFill(Color.RED); // Цвет цены
 
-            layout.getChildren().add(categoryBox);
-        });
+                        // Добавляем текстовые элементы в HBox
+                        itemBox.getChildren().addAll(nameAndDescription, priceText);
+                        HBox.setHgrow(nameAndDescription, Priority.ALWAYS); // Обеспечиваем, что название и описание займут всё доступное пространство
+                        nameAndDescription.wrappingWidthProperty().bind(itemBox.widthProperty().subtract(priceText.getLayoutBounds().getWidth() + 30)); // Обеспечиваем перенос текста
+
+                        categoryBox.getChildren().add(itemBox);
+                    });
+
+                    layout.getChildren().add(categoryBox);
+                });
+
+        scrollPane = new ScrollPane();
+        scrollPane.setContent(layout);
+        scrollPane.setFitToWidth(true);
+        scrollPane.setPadding(new Insets(10));
     }
 
-    private VBox createMenuSection(String category, List<String> items) {
-        VBox section = new VBox(10);
-        section.setAlignment(Pos.CENTER_LEFT);
-
-        Label categoryLabel = new Label(category);
-        categoryLabel.setFont(Font.font("Arial", FontWeight.BOLD, 18));
-        section.getChildren().add(categoryLabel);
-
-        for (String item : items) {
-            Label itemLabel = new Label(item);
-            itemLabel.setFont(Font.font("Arial", FontWeight.NORMAL, 14));
-            section.getChildren().add(itemLabel);
-        }
-
-        return section;
-    }
-
-    public VBox getLayout() {
-        return layout;
+    public ScrollPane getLayout() {
+        return scrollPane;
     }
 }

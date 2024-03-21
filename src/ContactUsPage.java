@@ -1,5 +1,7 @@
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
@@ -51,8 +53,27 @@ public class ContactUsPage {
         grid.add(commentField, 1, 2);
         grid.add(submitButton, 1, 3);
 
-        // Placeholder action for submit button
-        submitButton.setOnAction(e -> System.out.println("Comment submitted!"));
+        // Action for submit button
+        submitButton.setOnAction(e -> {
+            String name = nameField.getText();
+            String email = emailField.getText();
+            String comment = commentField.getText();
+            System.out.println("Name: " + name);
+            System.out.println("Email: " + email);
+            System.out.println("Comment: " + comment);
+
+            // Очистка полей формы после отправки
+            nameField.clear();
+            emailField.clear();
+            commentField.clear();
+
+            // Вывод уведомления о успешной отправке
+            Alert alert = new Alert(AlertType.INFORMATION);
+            alert.setTitle("Submission Successful");
+            alert.setHeaderText(null);
+            alert.setContentText("Your comment has been submitted!");
+            alert.showAndWait();
+        });
 
         return grid;
     }

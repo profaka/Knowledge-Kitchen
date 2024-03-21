@@ -70,32 +70,68 @@ public class BookingPage {
 
         // Placeholder action for submit button
         submitButton.setOnAction(e -> {
-            Booking newBooking = new Booking(
-                    nameField.getText(),
-                    emailField.getText(),
-                    phoneField.getText(),
-                    datePicker.getValue(),
-                    LocalTime.parse(timeField.getText()),
-                    Integer.parseInt(sizeField.getText()),
-                    specialRequestsField.getText()
-            );
-            mainController.addBooking(newBooking);
+            String errorMessage = "";
 
-            // Очистка полей формы после отправки
-            nameField.clear();
-            emailField.clear();
-            phoneField.clear();
-            datePicker.setValue(LocalDate.now()); // Возвращаем к текущей дате
-            timeField.clear();
-            sizeField.clear();
-            specialRequestsField.clear();
+            if (nameField.getText().isEmpty()) {
+                errorMessage += "Name cannot be empty.\n";
+            }
+            if (emailField.getText().isEmpty() || !emailField.getText().contains("@")) {
+                errorMessage += "Please enter a valid email.\n";
+            }
+            if (phoneField.getText().isEmpty()) {
+                errorMessage += "Phone cannot be empty.\n";
+            }
+            if (datePicker.getValue() == null) {
+                errorMessage += "Please select a date.\n";
+            }
+            try {
+                LocalTime.parse(timeField.getText());
+            } catch (Exception ex) {
+                errorMessage += "Please enter a valid time (HH:MM).\n";
+            }
+            try {
+                int partySize = Integer.parseInt(sizeField.getText());
+                if (partySize <= 0) {
+                    errorMessage += "Party size must be greater than 0.\n";
+                }
+            } catch (NumberFormatException ex) {
+                errorMessage += "Party size must be a number.\n";
+            }
 
-            // Показ уведомления об успешной отправке
-            Alert alert = new Alert(Alert.AlertType.INFORMATION);
-            alert.setTitle("Booking Submitted");
-            alert.setHeaderText(null);
-            alert.setContentText("Your booking has been successfully submitted!");
-            alert.showAndWait();
+            if (!errorMessage.isEmpty()) {
+                Alert alert = new Alert(Alert.AlertType.ERROR);
+                alert.setTitle("Invalid Input");
+                alert.setHeaderText("Please correct the following errors:");
+                alert.setContentText(errorMessage);
+                alert.showAndWait();
+            } else {
+                Booking newBooking = new Booking(
+                        nameField.getText(),
+                        emailField.getText(),
+                        phoneField.getText(),
+                        datePicker.getValue(),
+                        LocalTime.parse(timeField.getText()),
+                        Integer.parseInt(sizeField.getText()),
+                        specialRequestsField.getText()
+                );
+                mainController.addBooking(newBooking);
+
+                // Очистка полей формы после отправки
+                nameField.clear();
+                emailField.clear();
+                phoneField.clear();
+                datePicker.setValue(LocalDate.now()); // Возвращаем к текущей дате
+                timeField.clear();
+                sizeField.clear();
+                specialRequestsField.clear();
+
+                // Показ уведомления об успешной отправке
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("Booking Submitted");
+                alert.setHeaderText(null);
+                alert.setContentText("Your booking has been successfully submitted!");
+                alert.showAndWait();
+            }
         });
 
         return grid;
